@@ -2,13 +2,14 @@ version: '3.4'
 
 services:
   springboot-service:
-    image: shamkumbhar47/backend:hrmssai1
+    image: shamkumbhar47/backend:latest
+    container_name: backend-service
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-service:3306/hrms2
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     ports:
-      - "8080:8080"
+      - "8081:8080"
     depends_on:
       mysql-service:
         condition: service_healthy
@@ -17,16 +18,18 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: shamkumbhar47/frontend:hrmssai1
+    image: shamkumbhar47/frontend:latest
+    container_name: frontend-service
     ports:
       - "4200:80"
     depends_on:
-      - mysql-service
+      - springboot-service
     networks:
       - mynetwork
 
   mysql-service:
     image: mysql:8.0
+    container_name: mysql-service
     environment:
       MYSQL_ROOT_PASSWORD: "root"
       MYSQL_DATABASE: "hrms2"
