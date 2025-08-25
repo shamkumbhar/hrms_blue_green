@@ -3,7 +3,7 @@ version: '3.4'
 services:
   # Blue Backend (Current Stable)
   springboot-blue:
-    image: shamkumbhar47/backend:1.0   # use your versioned image
+    image: shamkumbhar47/backend:latest   # use your versioned image
     container_name: springboot-blue
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-service:3306/hrms2
