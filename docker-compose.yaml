@@ -1,32 +1,46 @@
 version: '3.4'
 
 services:
-  springboot-service:
-    image: shamkumbhar47/backend:latest
-    container_name: backend-service
+  # Blue Backend (Current Stable)
+  springboot-blue:
+    image: shamkumbhar47/backend:1.0   # use your versioned image
+    container_name: springboot-blue
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-service:3306/hrms2
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
-    ports:
-      - "8081:8080"
-    depends_on:
-      mysql-service:
-        condition: service_healthy
     networks:
       - mynetwork
     restart: unless-stopped
 
-  frontend:
-    image: shamkumbhar47/frontend:latest
-    container_name: frontend-service
+  # Green Backend (New Release Candidate)
+  springboot-green:
+    image: shamkumbhar47/backend:2.0   # new version image
+    container_name: springboot-green
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-service:3306/hrms2
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    networks:
+      - mynetwork
+    restart: unless-stopped
+
+  # Frontend + Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: hrms-nginx
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./dist:/usr/share/nginx/html   # angular dist folder
     ports:
       - "4200:80"
     depends_on:
-      - springboot-service
+      - springboot-blue
+      - springboot-green
     networks:
       - mynetwork
 
+  # MySQL Database
   mysql-service:
     image: mysql:8.0
     container_name: mysql-service
