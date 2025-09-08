@@ -26,8 +26,8 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: shamkumbhar47/frontend:blue
-    container_name: hrms-frontend-blue
+    image: shamkumbhar47/frontend:green
+    container_name: hrms-frontend-green
     ports:
       - "4200:80"
     networks:
