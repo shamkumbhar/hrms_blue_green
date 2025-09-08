@@ -3,9 +3,7 @@ version: '3.4'
 services:
   # Blue Backend (Current Stable)
   springboot-blue:
-    build:
-      context: ./backendNew
-      dockerfile: Dockerfile_blue
+    image: shamkumbhar47/backend:blue  
     container_name: springboot-blue
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-service:3306/hrms2
@@ -17,9 +15,7 @@ services:
 
   # Green Backend (New Release Candidate)
   springboot-green:
-    build:
-      context: ./backendNew
-      dockerfile: Dockerfile_green
+    image: shamkumbhar47/backend:green
     container_name: springboot-green
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-service:3306/hrms2
@@ -29,20 +25,29 @@ services:
       - mynetwork
     restart: unless-stopped
 
-  # Frontend + Nginx reverse proxy
+  frontend:
+    image: shamkumbhar47/frontend:blue
+    container_name: hrms-frontend-blue
+    ports:
+      - "4200:80"
+    networks:
+      - mynetwork
+    restart: unless-stopped
+
+  # Nginx reverse proxy for backend only
   nginx:
     image: nginx:alpine
     container_name: hrms-nginx
     volumes:
       - ./frontendNew/default.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./frontendNew/dist/hrms/browser:/usr/share/nginx/html   # angular dist folder
     ports:
-      - "4200:80"
+      - "80:80"
     depends_on:
       - springboot-blue
       - springboot-green
     networks:
       - mynetwork
+    restart: unless-stopped
 
   # MySQL Database
   mysql-service:
