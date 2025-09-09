@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: shamkumbhar47/frontend:blue2
+          image: shamkumbhar47/frontend:blue5
           ports:
             - containerPort: 80
 ---
@@ -54,5 +54,5 @@ spec:
       nodePort: 30080
   selector:
     app: frontend
-    version: green  # 👉 switch to "green" when promoting green
+    version: blue  # 👉 switch to "green" when promoting green
 
