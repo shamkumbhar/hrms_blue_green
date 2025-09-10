@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: shamkumbhar47/frontend:blue5
+          image: shamkumbhar47/frontend:blue6
           ports:
             - containerPort: 80
 ---
@@ -38,7 +38,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: shamkumbhar47/frontend:green2
+          image: shamkumbhar47/frontend:green6
           ports:
             - containerPort: 80
 ---

@@ -16,14 +16,14 @@ spec:
     spec:
       containers:
         - name: backend
-          image: shamkumbhar47/backend:blue   # 👈 blue backend image
+          image: shamkumbhar47/backend:blue6
           ports:
             - containerPort: 8080
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: blue
             - name: DB_HOST
-              value: mysql-service   # removed namespace suffix
+              value: mysql-service
             - name: DB_PORT
               value: "3306"
             - name: DB_NAME
@@ -32,19 +32,6 @@ spec:
               value: root
             - name: DB_PASSWORD
               value: root
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: springboot-blue
-spec:
-  type: ClusterIP
-  selector:
-    app: springboot
-    version: blue
-  ports:
-    - port: 8080
-      targetPort: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -64,7 +51,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: shamkumbhar47/backend:green   # 👈 green backend image
+          image: shamkumbhar47/backend:green6
           ports:
             - containerPort: 8080
           env:
@@ -84,12 +71,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: springboot-green
+  name: springboot-service   # 👈 stable service
 spec:
   type: ClusterIP
-  selector:
-    app: springboot
-    version: blue
   ports:
     - port: 8080
       targetPort: 8080
+  selector:
+    app: springboot
+    version: blue   # 👉 switch to green when promoting
+
